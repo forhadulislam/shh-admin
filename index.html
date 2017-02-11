@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<!-- HTML5 Hello world by kirupa - http://www.kirupa.com/html5/getting_your_feet_wet_html5_pg1.htm -->
+<html lang="en-us">
+
+<head>
+	<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Self Help Hotline</title>
+    
+    <link rel="stylesheet" href="https://bootswatch.com/darkly/bootstrap.min.css" />
+    <link rel="stylesheet" href="static/css/main.css" />
+    <script type="text/javascript">
+        if( !localStorage.username ){
+            location.href = 'login.html';
+        }
+        
+        
+    </script>
+</head>
+
+<body>
+	
+	<nav class="navbar top-menu navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand logo" href="/">
+            <img src="static/selfhelp.png" />
+          </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <div class="navbar-form navbar-right">
+	      		
+	      		  <a href="" class="btn">Refresh</a>
+	      		  <a href="#" class="btn" id='logout'>Logout</a>
+          </div>
+        </div>
+      </div>
+    </nav>
+	
+	<div id="mainContent">
+		<div id='posts' class='col-md-6 col-md-offset-3'>
+			<h2 class="title text-center">Reported posts</h2>
+			<ul class='list-unstyled'> </ul>
+			
+		</div>
+	</div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/3.6.9/firebase.js"></script>
+<script> 
+	var config = {
+	    apiKey: "AIzaSyBYSz3_wDygl1aC3-qYMNMKHJFhGMDh850",
+	    authDomain: "self-help-hotline-acp.firebaseapp.com",
+	    databaseURL: "https://self-help-hotline-acp.firebaseio.com",
+	    storageBucket: "self-help-hotline-acp.appspot.com",
+	    messagingSenderId: "746864609145"
+	};
+	var appf = firebase.initializeApp(config);
+	
+	function loadPosts(){
+		appf.database().ref("post/").orderByChild('reported').equalTo(true).on('value',function(snapshot){
+	      $('#posts ul').html('');
+	      snapshot.forEach(function(postSnapshot) {
+	          var post = postSnapshot.val();
+	          if(post.published == true){
+	          	var post_id = post.id;
+		        var li = $("<li/>", {
+				    html: '<div class="col-md-10">' + post.title + '</div>',
+				});
+				var button = $('<button />', {
+					html: "Delete",
+					class: 'btn btn-primary',
+					'data-id': post_id,
+					click: function(e){
+						var id = $(this).data('id');
+						setPostInactive(id);
+					}
+				});
+				li.append(button);
+	            li.appendTo("#posts ul");
+	            console.log(post);
+	          }
+	      });
+	      
+	    });
+	}
+	
+	
+	function setPostInactive(id){
+		appf.database().ref("post/" + id).once('value',function(snapshot){
+			if( snapshot.val() ) {
+		        appf.database().ref("post/" + id).update({"published": false});
+		        console.log(snapshot.val());
+		    } 
+			
+		})
+	}
+	
+	loadPosts();
+</script>
+<script type="text/javascript">
+	$(document).ready(function(){
+    	$('#logout').click(function(){
+	        localStorage.removeItem("username");
+	        location.href = 'login.html';
+	    })
+    })
+	
+</script>
+</body>
+</html>
