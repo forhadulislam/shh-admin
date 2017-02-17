@@ -130,14 +130,18 @@ body{
     color: #000;
 }
 #posts .title{
+    color: #a1a1a1;
     margin-bottom: 2em;
-    border-bottom: 1px solid #d2d2d2;
+    border-bottom: 3px solid #a1a1a1;
 }
 #posts ul li{
     padding: 6px 0;
 }
-#posts ul li:hover{
+#posts ul .post:hover{
     background: #f2f2f2;
+}
+#posts ul .post{
+    border-bottom: 1px solid #d2d2d2;
 }
 label{
     color: #000;

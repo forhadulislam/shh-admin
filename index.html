@@ -14,8 +14,6 @@
         if( !localStorage.username ){
             location.href = 'login.html';
         }
-        
-        
     </script>
 </head>
 
@@ -45,7 +43,7 @@
     </nav>
 	
 	<div id="mainContent">
-		<div id='posts' class='col-md-6 col-md-offset-3'>
+		<div id='posts' class='col-md-8 col-md-offset-2'>
 			<h2 class="title text-center">Reported posts</h2>
 			<ul class='list-unstyled'> 
 				<div class="cssload-container">
@@ -77,20 +75,37 @@
 	          if(post.published == true){
 	          	var post_id = post.id;
 	          	var totalReports = Object.keys(post.reports).length || 1;
+	          	var div = $("<div/>", {
+				});
+				
+				$(div).addClass('col-md-12 post');
 		        var li = $("<li/>", {
-				    html: '<div class="col-md-12"><div class="col-md-6"><p>' + post.title + '</p><p>' + post.details + '</p></div><div class="col-md-3">Reports: ' + totalReports + '</div></div>',
+				    html: '<div class="col-md-6"><p><b>Title:</b> ' + post.title + '</p><p><b>Posted by:</b> ' + post.username + '</p><p><b>Details:</b> ' + post.details + '</p></div><div class="col-md-3">Reports: ' + totalReports + '</div>',
 				});
 				var button = $('<button />', {
 					html: "Delete",
-					class: 'btn btn-primary',
+					class: 'btn btn-danger',
 					'data-id': post_id,
 					click: function(e){
 						var id = $(this).data('id');
 						setPostInactive(id);
 					}
 				});
+				var buttonCancel = $('<button />', {
+					html: "Discard",
+					class: 'btn btn-primary',
+					'data-id': post_id,
+					click: function(e){
+						var id = $(this).data('id');
+						//setPostInactive(id);
+					}
+				});
+				
+				li.append(buttonCancel);
 				li.append(button);
-	            li.appendTo("#posts ul");
+				
+				div.append(li);
+	            div.appendTo("#posts ul");
 	          }
 	      });
 	      
