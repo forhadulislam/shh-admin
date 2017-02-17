@@ -47,7 +47,11 @@
 	<div id="mainContent">
 		<div id='posts' class='col-md-6 col-md-offset-3'>
 			<h2 class="title text-center">Reported posts</h2>
-			<ul class='list-unstyled'> </ul>
+			<ul class='list-unstyled'> 
+				<div class="cssload-container">
+					<div class="cssload-whirlpool"></div>
+				</div>
+			</ul>
 			
 		</div>
 	</div>
@@ -62,7 +66,9 @@
 	    messagingSenderId: "746864609145"
 	};
 	var appf = firebase.initializeApp(config);
-	
+	window.onload = function(){
+		console.log('loaded');
+	}
 	function loadPosts(){
 		appf.database().ref("post/").orderByChild('reported').equalTo(true).on('value',function(snapshot){
 	      $('#posts ul').html('');
@@ -70,8 +76,9 @@
 	          var post = postSnapshot.val();
 	          if(post.published == true){
 	          	var post_id = post.id;
+	          	var totalReports = Object.keys(post.reports).length || 1;
 		        var li = $("<li/>", {
-				    html: '<div class="col-md-10">' + post.title + '</div>',
+				    html: '<div class="col-md-12"><div class="col-md-6"><p>' + post.title + '</p><p>' + post.details + '</p></div><div class="col-md-3">Reports: ' + totalReports + '</div></div>',
 				});
 				var button = $('<button />', {
 					html: "Delete",
@@ -84,7 +91,6 @@
 				});
 				li.append(button);
 	            li.appendTo("#posts ul");
-	            console.log(post);
 	          }
 	      });
 	      
