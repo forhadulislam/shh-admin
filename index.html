@@ -97,7 +97,7 @@
 					'data-id': post_id,
 					click: function(e){
 						var id = $(this).data('id');
-						//setPostInactive(id);
+						discardPost(id);
 					}
 				});
 				
@@ -117,6 +117,16 @@
 		appf.database().ref("post/" + id).once('value',function(snapshot){
 			if( snapshot.val() ) {
 		        appf.database().ref("post/" + id).update({"published": false});
+		        console.log(snapshot.val());
+		    } 
+			
+		})
+	}
+	
+	function discardPost(id){
+		appf.database().ref("post/" + id).once('value',function(snapshot){
+			if( snapshot.val() ) {
+		        appf.database().ref("post/" + id).update({"reported": false});
 		        console.log(snapshot.val());
 		    } 
 			
